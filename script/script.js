@@ -7,25 +7,59 @@ document.addEventListener('DOMContentLoaded', () => {
         blockChoice = document.getElementById('block-choice'),
         btnExit = document.getElementById('btn-exit'),
         formCustomer = document.getElementById('form-customer'),
-        ordersTable = document.getElementById('orders');
-    
+        ordersTable = document.getElementById('orders'),
+        modalOrder = document.getElementById('order_read'),
+        modalOrderActive = document.getElementById('order_active');
     const orders = [];
 
     const renderOrders = () => {
 
+        ordersTable.textContent = '';
+
         orders.forEach((order, i) => {
-            console.log(order);
-            console.log(i);
+            
+            ordersTable.innerHTML += `
+            <tr class="order" data-number-order="${i}">
+                <td>${i+1}</td>
+                <td>${order.title}</td>
+                <td class="${order.currency}"></td>
+                <td>${order.deadline}</td>
+            </tr>`;
         });
 
-        ordersTable.innerHTML += `
-        <tr class="order">
-            <td>1</td>
-            <td>2</td>
-            <td>3</td>
-            <td>4</td>
-        </tr>`;
-    }
+    };
+
+    const openModal = (numberOrder) => {
+        const order = orders[numberOrder];
+        const modal = order.active ? modalOrderActive : modalOrder;
+
+        const firstNameBlock = document.querySelector('.firstName'),
+            titleBlock = document.querySelector('.modal-title'),
+            emailBlock = document.querySelector('.email'),
+            descriptionBlock = document.querySelector('.description'),
+            deadlineBlock = document.querySelector('.deadline'),
+            currencyBlock = document.querySelector('.currency_img'),
+            countBlock = document.querySelector('.count'),
+            phoneBlock = document.querySelector('.phone');
+
+            titleBlock.textContent = order.title;
+
+
+        modal.style.display = 'block';
+
+
+    };
+
+    ordersTable.addEventListener('click', (event) => {
+        const target = event.target;
+
+        const targetOrder = target.closest('.order');
+        if (targetOrder) {
+            openModal(targetOrder.dataset.numberOrder);
+        }
+
+
+    });
 
 
 
@@ -65,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
         formCustomer.reset();
         
         orders.push(obj);
-        console.log(orders);
 
     });
 
