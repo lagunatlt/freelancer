@@ -6,9 +6,27 @@ document.addEventListener('DOMContentLoaded', () => {
         blockFreelancer = document.getElementById('block-freelancer'),
         blockChoice = document.getElementById('block-choice'),
         btnExit = document.getElementById('btn-exit'),
-        formCustomer = document.getElementById('form-customer');
+        formCustomer = document.getElementById('form-customer'),
+        ordersTable = document.getElementById('orders');
     
     const orders = [];
+
+    const renderOrders = () => {
+
+        orders.forEach((order, i) => {
+            console.log(order);
+            console.log(i);
+        });
+
+        ordersTable.innerHTML += `
+        <tr class="order">
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+        </tr>`;
+    }
+
 
 
     customer.addEventListener('click', () => {
@@ -19,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     freelancer.addEventListener('click', () => {
         blockChoice.style.display = 'none';
+        renderOrders();
         blockFreelancer.style.display = 'block';
         btnExit.style.display = 'block';
     });
@@ -34,29 +53,25 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const obj = {};
 
-        const elements = [...formCustomer.elements].filter((elem) => ((elem.tagName === 'INPUT' && elem.type !== 'radio') || 
-        (elem.type === 'radio' && elem.checked) || elem.tagName === 'TEXTAREA'));
+        const elements = [...formCustomer.elements]
+            .filter((elem) => (elem.tagName === 'INPUT' && elem.type !== 'radio') || 
+                (elem.type === 'radio' && elem.checked) || elem.tagName === 'TEXTAREA');
 
-        [...formCustomer.elements].forEach((elem) => {
-            if ((elem.tagName === 'INPUT' && elem.type !== 'radio') || 
-                (elem.type === 'radio' && elem.checked) || 
-                elem.tagName === 'TEXTAREA') {
-                
-                obj[elem.name] = elem.value;
-                if (elem.type !== 'radio') {
-                    elem.value = '';
-                }
-            }
+        elements.forEach((elem) => {
+            obj[elem.name] = elem.value;
+
         });
 
-        for (const elem of formCustomer.elements) {
-
-        }
-
-        
+        formCustomer.reset();
         
         orders.push(obj);
         console.log(orders);
 
     });
+
+
+    
+
+
+
 });
