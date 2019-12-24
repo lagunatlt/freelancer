@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         orders.forEach((order, i) => {
             
             ordersTable.innerHTML += `
-            <tr class="order" data-number-order="${i}">
+            <tr class="order ${order.active ? 'taken' : ''}" 
+                data-number-order="${i}">
                 <td>${i+1}</td>
                 <td>${order.title}</td>
                 <td class="${order.currency}"></td>
@@ -40,8 +41,22 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.style.display = 'none';
         }
 
-        if (target.classList.containts('get-order')) {
+        if (target.classList.contains('get-order')) {
             order.active = true;
+            modal.style.display = 'none';
+            renderOrders();
+        }
+
+        if (target.id === 'capitulation') {
+            order.active = true;
+            modal.style.display = 'none';
+            renderOrders();
+        }
+
+        if (target.id === 'ready') {
+            order.active = true;
+            modal.style.display = 'none';
+            renderOrders();
         }
 
     }
