@@ -29,26 +29,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
     };
 
+    const handlerModal = (event) => {
+        const target = event.target;
+        const modal = target.closest('.order-modal');
+        const order = orders[modal.id];
+
+        console.log(target);
+
+        if (target.closest('.close') || target === modal) {
+            modal.style.display = 'none';
+        }
+
+        if (target.classList.containts('get-order')) {
+            order.active = true;
+        }
+
+    }
+
     const openModal = (numberOrder) => {
         const order = orders[numberOrder];
-        const modal = order.active ? modalOrderActive : modalOrder;
 
-        const firstNameBlock = document.querySelector('.firstName'),
-            titleBlock = document.querySelector('.modal-title'),
-            emailBlock = document.querySelector('.email'),
-            descriptionBlock = document.querySelector('.description'),
-            deadlineBlock = document.querySelector('.deadline'),
-            currencyBlock = document.querySelector('.currency_img'),
-            countBlock = document.querySelector('.count'),
-            phoneBlock = document.querySelector('.phone');
+        const { title, firstName, email, phone, description, amount, currency, deadline, active = false } = order;
 
-            titleBlock.textContent = order.title;
+        const modal = active ? modalOrderActive : modalOrder;
 
 
-        modal.style.display = 'block';
+        const firstNameBlock = modal.querySelector('.firstName'),
+            titleBlock = modal.querySelector('.modal-title'),
+            emailBlock = modal.querySelector('.email'),
+            descriptionBlock = modal.querySelector('.description'),
+            deadlineBlock = modal.querySelector('.deadline'),
+            currencyBlock = modal.querySelector('.currency_img'),
+            countBlock = modal.querySelector('.count'),
+            phoneBlock = modal.querySelector('.phone');
 
+        modal.id = numberOrder;
+        titleBlock.textContent = title;
+        firstNameBlock.textContent = firstName;
+        emailBlock.textContent = email;
+        emailBlock.href = 'mailto:' + email;
+        descriptionBlock.textContent = description;
+        deadlineBlock.textContent = deadline;
+        currencyBlock.className = 'currency_img';
+        currencyBlock.classList.add(currency);
+        countBlock.textContent = amount;
 
+        phoneBlock ? phoneBlock.href = 'tel:' + phone : '';
+        //или
+        //phoneBlock && (phoneBlock.href = 'tel:' + phone);
+
+        modal.style.display = 'flex';
+
+        modal.addEventListener('click', handlerModal)
     };
+
 
     ordersTable.addEventListener('click', (event) => {
         const target = event.target;
@@ -57,11 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (targetOrder) {
             openModal(targetOrder.dataset.numberOrder);
         }
-
-
     });
-
-
 
     customer.addEventListener('click', () => {
         blockChoice.style.display = 'none';
