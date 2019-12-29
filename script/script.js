@@ -10,7 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
         ordersTable = document.getElementById('orders'),
         modalOrder = document.getElementById('order_read'),
         modalOrderActive = document.getElementById('order_active');
-    const orders = [];
+
+    const orders = JSON.parse(localStorage.getItem('freeOrders')) || [];
+    console.log(orders);
+
+    const toStorage = () => {
+        localStorage.setItem('freeOrders', JSON.stringify(orders));
+    };
+
+    const calcDeadline = (deadline) => {
+        const day = '10 дней';
+        return day;
+    }
+   
 
     const renderOrders = () => {
 
@@ -24,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${i+1}</td>
                 <td>${order.title}</td>
                 <td class="${order.currency}"></td>
-                <td>${order.deadline}</td>
+                <td>${calcDeadline(order.deadline)}</td>
             </tr>`;
         });
 
@@ -35,7 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const modal = target.closest('.order-modal');
         const order = orders[modal.id];
 
-        console.log(target);
+        const baseAction = () => {
+            modal.style.display = 'none';
+            toStorage();
+            renderOrders();
+        }
+        // console.log(target);
 
         if (target.closest('.close') || target === modal) {
             modal.style.display = 'none';
@@ -43,20 +60,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (target.classList.contains('get-order')) {
             order.active = true;
-            modal.style.display = 'none';
-            renderOrders();
+            baseAction();
         }
 
         if (target.id === 'capitulation') {
-            order.active = true;
-            modal.style.display = 'none';
-            renderOrders();
+            order.active = false;
+            baseAction();
         }
 
         if (target.id === 'ready') {
-            order.active = true;
-            modal.style.display = 'none';
-            renderOrders();
+            orders.splice(orders.indexOf(order), 1);
+            baseAction();
         }
 
     }
@@ -84,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         emailBlock.textContent = email;
         emailBlock.href = 'mailto:' + email;
         descriptionBlock.textContent = description;
-        deadlineBlock.textContent = deadline;
+        deadlineBlock.textContent = calcDeadline(deadline);
         currencyBlock.className = 'currency_img';
         currencyBlock.classList.add(currency);
         countBlock.textContent = amount;
@@ -144,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formCustomer.reset();
         
         orders.push(obj);
+        toStorage();
 
     });
 
